@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yah Rapha X Mastercare - CNY Lucky Wheel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS STYLING --- */
+        :root {
+            --red-bg: #8B0000;         
+            --red-bright: #D32F2F;     
+            --gold-main: #FFD700;      
+            --gold-shiny: #FFF8DC;     
+        }
+
+        body {
+            font-family: 'Battambang', 'Poppins', 'Noto Sans SC', sans-serif;
+            background: radial-gradient(circle at center, #b30000 0%, #4a0000 100%);
+            color: var(--gold-main);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        /* Oriental Pattern Overlay */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(var(--gold-main) 1.5px, transparent 1.5px),
+                radial-gradient(rgba(255,255,255,0.1) 2px, transparent 2px);
+            background-size: 50px 50px, 120px 120px;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* --- HEADER & LOGO --- */
+        .header-container { 
+            text-align: center; 
+            padding: 25px 15px 10px; 
+            z-index: 1; 
+            width: 100%; 
+            max-width: 600px; 
+        }
+        
+        .logo-box {
+            width: 160px;
+            margin: 0 auto 15px; 
+            background: #ffffff; 
+            padding: 8px;
+            border-radius: 15px; 
+            border: 3px solid var(--gold-main);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo-box img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin: 0; 
+            font-size: 1.8rem;
+            line-height: 1.4;
+            background: linear-gradient(to bottom, #FFF, var(--gold-main));
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            font-weight: 700; 
+            filter: drop-shadow(0px 2px 0px rgba(0,0,0,0.5));
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .khmer-title {
+            font-size: 1.4rem;
+            color: var(--gold-main);
+            margin-top: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .subtitle {
+            color: var(--gold-shiny);
+            font-size: 1rem;
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        /* --- WHEEL UI --- */
+        .wheel-wrapper {
+            position: relative; 
+            width: 360px; 
+            height: 360px; 
+            margin: 15px auto 35px;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1;
+        }
+        
+        .wheel-wrapper::after {
+            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2); 
+            z-index: -1;
+        }
+
+        .wheel-container {
+            width: 100%; height: 100%; 
+            border-radius: 50%; 
+            border: 8px solid var(--gold-main);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            background: #fff; 
+            box-sizing: border-box; 
+            overflow: hidden;
+        }
+        
+        canvas { width: 100%; height: 100%; display: block; }
+        
+        .pointer {
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; 
+            border-left: 22px solid transparent; 
+            border-right: 22px solid transparent;
+            border-top: 55px solid #fff; 
+            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.6)); 
+            z-index: 10;
+        }
+        
+        .center-circle {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 55px; height: 55px; 
+            background: linear-gradient(135deg, #b30000, #800000);
+            border: 4px solid var(--gold-main);
+            border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center;
+            color: var(--gold-main); 
+            font-size: 26px; 
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* --- BUTTON UI --- */
+        #spinBtn {
+            z-index: 1; 
+            background: linear-gradient(180deg, #FFD700 0%, #FF8C00 100%);
+            border: 3px solid #FFF; 
+            padding: 15px 40px; 
+            font-size: 1.5rem; 
+            font-weight: 700;
+            color: #8B0000; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transition: transform 0.1s; 
+            text-transform: uppercase; 
+            font-family: 'Battambang', sans-serif;
+            width: 85%; max-width: 350px;
+            animation: pulseBtn 2s infinite;
+        }
+        
+        @keyframes pulseBtn {
+            0% { transform: scale(1); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+            50% { transform: scale(1.03); box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4); }
+            100% { transform: scale(1); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        }
+
+        #spinBtn:active { transform: scale(0.96); animation: none; }
+        #spinBtn:disabled { background: #555; color: #888; border-color: #666; cursor: not-allowed; animation: none; }
+
+        /* --- CONTACT CARD UI --- */
+        .info-card {
+            z-index: 1; 
+            width: 85%; max-width: 450px; 
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 16px; 
+            padding: 25px; 
+            margin-top: 40px; 
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            text-align: center; 
+            backdrop-filter: blur(8px);
+        }
+        
+        .info-card h3 {
+            color: var(--gold-main); 
+            margin-top: 0; 
+            border-bottom: 2px solid var(--gold-main); 
+            padding-bottom: 10px;
+            display: inline-block;
+            font-size: 1.3rem;
+            font-family: 'Battambang', sans-serif;
+        }
+
+        .contact-item {
+            display: flex; align-items: center; justify-content: center;
+            margin: 12px 0; 
+            color: #fff; 
+            text-decoration: none;
+            padding: 12px; 
+            background: rgba(255,255,255,0.08); 
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            font-family: 'Battambang', sans-serif;
+            font-size: 1rem;
+        }
+        .contact-item:hover { 
+            background: rgba(255, 215, 0, 0.15); 
+            border-color: var(--gold-main); 
+            color: var(--gold-main); 
+        }
+
+        /* --- MODAL UI --- */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 200;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: #FFF; 
+            background-image: radial-gradient(#FFF8DC 15%, transparent 15%);
+            background-size: 20px 20px;
+            padding: 40px 25px; 
+            border-radius: 25px; 
+            text-align: center;
+            border: 5px solid var(--gold-main); 
+            max-width: 85%; width: 320px;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.5);
+            animation: popIn 0.4s ease;
+        }
+        .prize-text {
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: #D32F2F;
+            margin: 20px 0; 
+            padding: 15px; 
+            background: #FFF8DC;
+            border: 2px dashed var(--gold-main); 
+            border-radius: 12px;
+            font-family: 'Battambang', sans-serif;
+        }
+        .modal-msg {
+            font-size: 1rem; color: #444; line-height: 1.6; font-family: 'Battambang', sans-serif;
+        }
+        .close-btn {
+            background: linear-gradient(to right, #D32F2F, #B71C1C); 
+            color: #fff; 
+            border: none; 
+            padding: 12px 40px;
+            border-radius: 30px; 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(183, 28, 28, 0.4);
+            font-family: 'Battambang', sans-serif;
+        }
+        @keyframes popIn { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Lantern Animation */
+        .lantern-container { position: absolute; top: 0; width: 100%; height: 120px; pointer-events: none; z-index: 2; overflow: hidden; }
+        .lantern {
+            position: absolute; top: -15px; width: 50px; height: 70px;
+            background: #d32f2f; border-radius: 15px; border: 2px solid #FFD700;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            animation: swing 3.5s infinite ease-in-out alternate; transform-origin: top center;
+        }
+        .lantern::after { content: ''; position: absolute; bottom: -15px; left: 20px; width: 10px; height: 25px; background: #FFD700; }
+        @keyframes swing { 0% { transform: rotate(-6deg); } 100% { transform: rotate(6deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="lantern-container">
+        <div class="lantern" style="left: 20px;"></div>
+        <div class="lantern" style="right: 20px; animation-delay: 1s;"></div>
+    </div>
+
+    <div class="header-container">
+        <div class="logo-box">
+            <img src="C:\Users\ASUS\Desktop\givaway\logo.png" alt="Yah Rapha Logo">
+        </div>
+        <h1>Yah Rapha X MasterCare</h1>
+        <div class="khmer-title">រីករាយពិធីបុណ្យចូលឆ្នាំចិន</div>
+        <div class="subtitle">សូមជូនពរឆ្នាំថ្មី ហេង ហេង! 🧧</div>
+    </div>
+
+    <div class="wheel-wrapper">
+        <div class="pointer"></div>
+        <div class="wheel-container">
+            <canvas id="wheelCanvas" width="500" height="500"></canvas>
+        </div>
+        <div class="center-circle">福</div>
+    </div>
+
+    <button id="spinBtn">ចុចផ្សងសំណាង (Spin)</button>
+
+    <div class="info-card">
+        <h3>ទំនាក់ទំនងយើងខ្ញុំ (Contact)</h3>
+        <a href="https://www.facebook.com/profile.php?id=61550845002500" class="contact-item">
+            🔵 Facebook Page
+        </a>
+        <div class="contact-item">
+            ☎️ 097 777 9777 | 010 552 088
+        </div>
+        <a href="https://t.me/Yahrapha" class="contact-item">
+            ✈️ Telegram: @Yahrapha
+        </a>
+        <a href="https://maps.app.goo.gl/SDYVW5kAucR6pdXp7?g_st=com.google.maps.preview.copy" class="contact-item">
+            📍 ទីតាំង (Location Map)
+        </a>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2 id="mTitle" style="color:#B71C1C; margin:0; font-size: 1.6rem; font-family:'Battambang';">អបអរសាទរ!</h2>
+            <div id="mPrize" class="prize-text"></div>
+            <p id="mMsg" class="modal-msg"></p>
+            <button class="close-btn" onclick="document.getElementById('resultModal').style.display='none'">យល់ព្រម (OK)</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spinBtn');
+        const modal = document.getElementById('resultModal');
+
+        // --- PRIZES CONFIG (Trilingual) ---
+        const prizes = [
+            // WINNERS (3 Items)
+            { lines: ["$5", "ប័ណ្ណ Voucher"], color: "#D32F2F", text: "#FFD700" },          
+            { lines: ["$10", "ប័ណ្ណ Voucher"], color: "#FFD700", text: "#D32F2F" },         
+            { lines: ["Free", "ស្ប៉ាមុខ (Facial)"], color: "#D32F2F", text: "#FFD700" },     
+            
+            // LOSERS - 0% Chance (Services)
+            { lines: ["Free សម្រកគីឡូ", "1 តួខ្លួន"], color: "#FFD700", text: "#D32F2F" }, 
+            { lines: ["Free HIFU", "Ultra Former"], color: "#D32F2F", text: "#FFD700" },    
+            { lines: ["Free", "Botox"], color: "#FFD700", text: "#D32F2F" },                
+            
+            // LOSERS - 0% Chance (Big Vouchers)
+            { lines: ["$50", "ប័ណ្ណ Voucher"], color: "#D32F2F", text: "#FFD700" },         
+            { lines: ["$100", "ប័ណ្ណ Voucher"], color: "#FFD700", text: "#D32F2F" },        
+            
+            // LOSER - 35% Chance (Try Again)
+            { lines: ["សូមអរគុណ", "Good Luck"], color: "#FFF8DC", text: "#555" }     
+        ];
+
+        // --- WINNING ODDS (Total 100) ---
+        const weights = [
+            30,  // Index 0: $5 Voucher   (30%)
+             5,  // Index 1: $10 Voucher  (5%)
+            30,  // Index 2: Free Facial  (30%)
+             0,  // Index 3: Slimming     (0%)
+             0,  // Index 4: HIFU         (0%)
+             0,  // Index 5: Botox        (0%)
+             0,  // Index 6: $50 Voucher  (0%)
+             0,  // Index 7: $100 Voucher (0%)
+            35   // Index 8: Good Luck    (35%)
+        ];
+
+        let startAngle = 0;
+        let arc = Math.PI / (prizes.length / 2);
+        let isSpinning = false;
+
+        function drawWheel() {
+            ctx.clearRect(0, 0, 500, 500);
+            const cx = 250, cy = 250, r = 240;
+
+            for(let i=0; i<prizes.length; i++) {
+                let angle = startAngle + i * arc;
+                
+                // Draw Segment
+                ctx.fillStyle = prizes[i].color;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, angle, angle + arc);
+                ctx.fill();
+                ctx.stroke();
+
+                // Draw Text
+                ctx.save();
+                ctx.fillStyle = prizes[i].text;
+                // Add Shadow for readability
+                ctx.shadowColor = "rgba(0,0,0,0.2)";
+                ctx.shadowBlur = 4;
+                
+                ctx.translate(cx + Math.cos(angle + arc/2)*160, cy + Math.sin(angle + arc/2)*160);
+                ctx.rotate(angle + arc/2 + Math.PI/2);
+                
+                // Use Battambang for Khmer support
+                ctx.font = 'bold 15px "Battambang", sans-serif'; 
+                ctx.textAlign = "center";
+                ctx.fillText(prizes[i].lines[0], 0, -10);
+                if(prizes[i].lines[1]) ctx.fillText(prizes[i].lines[1], 0, 15);
+                ctx.restore();
+            }
+        }
+
+        function getWinner() {
+            let total = weights.reduce((a,b)=>a+b,0);
+            let r = Math.random() * total;
+            for(let i=0; i<weights.length; i++) {
+                if(r < weights[i]) return i;
+                r -= weights[i];
+            }
+            return weights.length-1;
+        }
+
+        function spin() {
+            if(isSpinning) return;
+            isSpinning = true;
+            spinBtn.disabled = true;
+
+            let winner = getWinner();
+            let slice = (2*Math.PI)/prizes.length;
+            let targetAngle = (winner*slice) + (slice/2);
+            let stop = (3*Math.PI/2) - targetAngle + (Math.random()*slice*0.8 - slice*0.4);
+            let rotation = (10 * 2*Math.PI) + (stop - (startAngle % (2*Math.PI)));
+
+            let start = Date.now();
+            let duration = 5000;
+            let initAngle = startAngle;
+
+            function animate() {
+                let now = Date.now();
+                let t = Math.min(1, (now-start)/duration);
+                let ease = 1 - Math.pow(1-t, 4); 
+                startAngle = initAngle + (rotation * ease);
+                drawWheel();
+                
+                if(t<1) requestAnimationFrame(animate);
+                else {
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                    showResult(winner);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function showResult(i) {
+            let p = prizes[i];
+            let text = p.lines.join(" ");
+            let title = document.getElementById('mTitle');
+            let prizeDiv = document.getElementById('mPrize');
+            let msg = document.getElementById('mMsg');
+
+            // Index 8 is the Loser (Good Luck)
+            if(i === 8) { 
+                title.innerText = "អរគុណ! (Thank You)";
+                prizeDiv.innerText = "សំណាងល្អលើកក្រោយ"; // Good Luck Next Time in Khmer
+                prizeDiv.style.color = "#555";
+                prizeDiv.style.background = "#f0f0f0";
+                prizeDiv.style.borderColor = "#ccc";
+                
+                msg.innerHTML = "ជូនពរអ្នកសំណាងល្អក្នុងឆ្នាំថ្មី!<br>Wish you luck in the New Year!<br>祝你好运！";
+                
+            } else {
+                title.innerText = "អបអរសាទរ! (Congrats)";
+                prizeDiv.innerText = text;
+                prizeDiv.style.color = "#D32F2F";
+                prizeDiv.style.background = "#FFF8DC";
+                prizeDiv.style.borderColor = "#FFD700";
+                
+                msg.innerHTML = "សូមបង្ហាញអេក្រង់នេះដល់បុគ្គលិកដើម្បីទទួលរង្វាន់។<br>Please show this screen to our staff to claim.<br>请向工作人员出示此屏幕以领取奖品。";
+            }
+            modal.style.display = 'flex';
+        }
+
+        drawWheel();
+        spinBtn.addEventListener('click', spin);
+    </script>
+</body>
+</html>
