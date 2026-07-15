@@ -90,7 +90,7 @@
       if(spinning)return;
       spinning=true;spinBtn.disabled=true;spinBtn.textContent='កំពុងបង្វិល...';status.textContent='សូមរង់ចាំលទ្ធផល';
       const winnerIndex=Math.floor(Math.random()*numbers.length),slice=Math.PI*2/numbers.length;
-      const target=-(winnerIndex*slice+slice/2)+Math.PI/2;
+      const target=-(winnerIndex*slice+slice/2);
       const start=rotation,total=8*Math.PI+((target-start)%(Math.PI*2)+Math.PI*2)%(Math.PI*2),duration=5200,startTime=performance.now();
       function animate(now){
         const p=Math.min((now-startTime)/duration,1),ease=1-Math.pow(1-p,4);
