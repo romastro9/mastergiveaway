@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="theme-color" content="#681225" />
   <title>MasterCare Lucky Wheel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,10 +72,13 @@
     const spinBtn=document.getElementById('spinBtn'),status=document.getElementById('status');
     const modal=document.getElementById('resultModal'),resultNumber=document.getElementById('resultNumber');
     const palette=['#681225','#f8eadf','#a75b69','#ead09b','#4b0b1a','#fff8ed'];
+    const TWO_PI=Math.PI*2;
     let rotation=0,spinning=false;
 
+    function normalizeAngle(angle){return((angle%TWO_PI)+TWO_PI)%TWO_PI}
+
     function drawWheel(angle=0){
-      const size=canvas.width,c=size/2,r=c-14,slice=Math.PI*2/numbers.length;
+      const size=canvas.width,c=size/2,r=c-14,slice=TWO_PI/numbers.length;
       ctx.clearRect(0,0,size,size);ctx.save();ctx.translate(c,c);ctx.rotate(angle);
       numbers.forEach((n,i)=>{
         const start=i*slice-Math.PI/2;
@@ -84,20 +90,28 @@
       });ctx.restore();
     }
 
+    function numberAtPointer(angle){
+      const slice=TWO_PI/numbers.length;
+      const pointerIndex=Math.floor(normalizeAngle(-angle)/slice)%numbers.length;
+      return numbers[pointerIndex];
+    }
+
     function showResult(number){resultNumber.textContent=number;modal.classList.add('show')}
 
     function spin(){
       if(spinning)return;
       spinning=true;spinBtn.disabled=true;spinBtn.textContent='កំពុងបង្វិល...';status.textContent='សូមរង់ចាំលទ្ធផល';
-      const winnerIndex=Math.floor(Math.random()*numbers.length),slice=Math.PI*2/numbers.length;
-      const target=-(winnerIndex*slice+slice/2);
-      const start=rotation,total=8*Math.PI+((target-start)%(Math.PI*2)+Math.PI*2)%(Math.PI*2),duration=5200,startTime=performance.now();
+      const selectedIndex=Math.floor(Math.random()*numbers.length),slice=TWO_PI/numbers.length;
+      const target=-(selectedIndex*slice+slice/2);
+      const start=rotation,total=8*Math.PI+normalizeAngle(target-start),duration=5200,startTime=performance.now();
       function animate(now){
         const p=Math.min((now-startTime)/duration,1),ease=1-Math.pow(1-p,4);
         rotation=start+total*ease;drawWheel(rotation);
         if(p<1){requestAnimationFrame(animate)}else{
-          spinning=false;rotation%=Math.PI*2;
-          const winner=numbers[winnerIndex];
+          spinning=false;
+          rotation=normalizeAngle(target);
+          drawWheel(rotation);
+          const winner=numberAtPointer(rotation);
           status.textContent=`លេខសំណាងគឺ ${winner}`;
           spinBtn.disabled=false;spinBtn.textContent='បង្វិលម្ដងទៀត';
           showResult(winner);
