@@ -1,486 +1,115 @@
 <!DOCTYPE html>
 <html lang="km">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yah Rapha X Mastercare - CNY Lucky Wheel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        /* --- CSS STYLING --- */
-        :root {
-            --red-bg: #8B0000;         
-            --red-bright: #D32F2F;     
-            --gold-main: #FFD700;      
-            --gold-shiny: #FFF8DC;     
-        }
-
-        body {
-            font-family: 'Battambang', 'Poppins', 'Noto Sans SC', sans-serif;
-            background: radial-gradient(circle at center, #b30000 0%, #4a0000 100%);
-            color: var(--gold-main);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            padding-bottom: 50px;
-        }
-
-        /* Oriental Pattern Overlay */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: 
-                radial-gradient(var(--gold-main) 1.5px, transparent 1.5px),
-                radial-gradient(rgba(255,255,255,0.1) 2px, transparent 2px);
-            background-size: 50px 50px, 120px 120px;
-            opacity: 0.1;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* --- HEADER & LOGO --- */
-        .header-container { 
-            text-align: center; 
-            padding: 25px 15px 10px; 
-            z-index: 1; 
-            width: 100%; 
-            max-width: 600px; 
-        }
-        
-        .logo-box {
-            width: 160px;
-            margin: 0 auto 15px; 
-            background: #ffffff; 
-            padding: 8px;
-            border-radius: 15px; 
-            border: 3px solid var(--gold-main);
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .logo-box img { 
-            width: 100%; 
-            height: auto; 
-            display: block; 
-            border-radius: 5px;
-        }
-
-        h1 {
-            margin: 0; 
-            font-size: 1.8rem;
-            line-height: 1.4;
-            background: linear-gradient(to bottom, #FFF, var(--gold-main));
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent;
-            font-weight: 700; 
-            filter: drop-shadow(0px 2px 0px rgba(0,0,0,0.5));
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .khmer-title {
-            font-size: 1.4rem;
-            color: var(--gold-main);
-            margin-top: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-        }
-
-        .subtitle {
-            color: var(--gold-shiny);
-            font-size: 1rem;
-            margin-top: 5px;
-            font-weight: 400;
-        }
-
-        /* --- WHEEL UI --- */
-        .wheel-wrapper {
-            position: relative; 
-            width: 360px; 
-            height: 360px; 
-            margin: 15px auto 35px;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 1;
-        }
-        
-        .wheel-wrapper::after {
-            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2); 
-            z-index: -1;
-        }
-
-        .wheel-container {
-            width: 100%; height: 100%; 
-            border-radius: 50%; 
-            border: 8px solid var(--gold-main);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-            background: #fff; 
-            box-sizing: border-box; 
-            overflow: hidden;
-        }
-        
-        canvas { width: 100%; height: 100%; display: block; }
-        
-        .pointer {
-            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; 
-            border-left: 22px solid transparent; 
-            border-right: 22px solid transparent;
-            border-top: 55px solid #fff; 
-            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.6)); 
-            z-index: 10;
-        }
-        
-        .center-circle {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 55px; height: 55px; 
-            background: linear-gradient(135deg, #b30000, #800000);
-            border: 4px solid var(--gold-main);
-            border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center;
-            color: var(--gold-main); 
-            font-size: 26px; 
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        /* --- BUTTON UI --- */
-        #spinBtn {
-            z-index: 1; 
-            background: linear-gradient(180deg, #FFD700 0%, #FF8C00 100%);
-            border: 3px solid #FFF; 
-            padding: 15px 40px; 
-            font-size: 1.5rem; 
-            font-weight: 700;
-            color: #8B0000; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            transition: transform 0.1s; 
-            text-transform: uppercase; 
-            font-family: 'Battambang', sans-serif;
-            width: 85%; max-width: 350px;
-            animation: pulseBtn 2s infinite;
-        }
-        
-        @keyframes pulseBtn {
-            0% { transform: scale(1); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-            50% { transform: scale(1.03); box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4); }
-            100% { transform: scale(1); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-        }
-
-        #spinBtn:active { transform: scale(0.96); animation: none; }
-        #spinBtn:disabled { background: #555; color: #888; border-color: #666; cursor: not-allowed; animation: none; }
-
-        /* --- CONTACT CARD UI --- */
-        .info-card {
-            z-index: 1; 
-            width: 85%; max-width: 450px; 
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 16px; 
-            padding: 25px; 
-            margin-top: 40px; 
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            text-align: center; 
-            backdrop-filter: blur(8px);
-        }
-        
-        .info-card h3 {
-            color: var(--gold-main); 
-            margin-top: 0; 
-            border-bottom: 2px solid var(--gold-main); 
-            padding-bottom: 10px;
-            display: inline-block;
-            font-size: 1.3rem;
-            font-family: 'Battambang', sans-serif;
-        }
-
-        .contact-item {
-            display: flex; align-items: center; justify-content: center;
-            margin: 12px 0; 
-            color: #fff; 
-            text-decoration: none;
-            padding: 12px; 
-            background: rgba(255,255,255,0.08); 
-            border-radius: 10px;
-            border: 1px solid transparent;
-            transition: all 0.2s;
-            font-family: 'Battambang', sans-serif;
-            font-size: 1rem;
-        }
-        .contact-item:hover { 
-            background: rgba(255, 215, 0, 0.15); 
-            border-color: var(--gold-main); 
-            color: var(--gold-main); 
-        }
-
-        /* --- MODAL UI --- */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 200;
-            backdrop-filter: blur(4px);
-        }
-        .modal-content {
-            background: #FFF; 
-            background-image: radial-gradient(#FFF8DC 15%, transparent 15%);
-            background-size: 20px 20px;
-            padding: 40px 25px; 
-            border-radius: 25px; 
-            text-align: center;
-            border: 5px solid var(--gold-main); 
-            max-width: 85%; width: 320px;
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.5);
-            animation: popIn 0.4s ease;
-        }
-        .prize-text {
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            color: #D32F2F;
-            margin: 20px 0; 
-            padding: 15px; 
-            background: #FFF8DC;
-            border: 2px dashed var(--gold-main); 
-            border-radius: 12px;
-            font-family: 'Battambang', sans-serif;
-        }
-        .modal-msg {
-            font-size: 1rem; color: #444; line-height: 1.6; font-family: 'Battambang', sans-serif;
-        }
-        .close-btn {
-            background: linear-gradient(to right, #D32F2F, #B71C1C); 
-            color: #fff; 
-            border: none; 
-            padding: 12px 40px;
-            border-radius: 30px; 
-            font-size: 1.1rem; 
-            cursor: pointer; 
-            margin-top: 20px;
-            box-shadow: 0 4px 10px rgba(183, 28, 28, 0.4);
-            font-family: 'Battambang', sans-serif;
-        }
-        @keyframes popIn { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* Lantern Animation */
-        .lantern-container { position: absolute; top: 0; width: 100%; height: 120px; pointer-events: none; z-index: 2; overflow: hidden; }
-        .lantern {
-            position: absolute; top: -15px; width: 50px; height: 70px;
-            background: #d32f2f; border-radius: 15px; border: 2px solid #FFD700;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-            animation: swing 3.5s infinite ease-in-out alternate; transform-origin: top center;
-        }
-        .lantern::after { content: ''; position: absolute; bottom: -15px; left: 20px; width: 10px; height: 25px; background: #FFD700; }
-        @keyframes swing { 0% { transform: rotate(-6deg); } 100% { transform: rotate(6deg); } }
-
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#681225" />
+  <title>MasterCare Lucky Wheel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root{--wine:#681225;--wine2:#3c0714;--rose:#a96570;--gold:#d9b774;--cream:#fff9f1;--ink:#2a1720}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:'Kantumruy Pro',sans-serif;color:var(--cream);background:radial-gradient(circle at 50% 0,#9a4054 0,transparent 34%),linear-gradient(145deg,var(--wine),var(--wine2));overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.13) 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(to bottom,#000,transparent 72%)}
+    .page{position:relative;z-index:1;min-height:100vh;display:grid;place-items:center;padding:28px 16px 42px}
+    .card{width:min(100%,620px);text-align:center}
+    .brand{display:inline-flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px 18px;border:1px solid rgba(217,183,116,.55);border-radius:999px;background:rgba(255,255,255,.07);backdrop-filter:blur(10px);letter-spacing:.12em;font-weight:800}
+    .brand-mark{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#fff7db,var(--gold));color:var(--wine);font-family:'Playfair Display',serif;font-size:21px;box-shadow:0 0 25px rgba(217,183,116,.4)}
+    h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,7vw,3.7rem);margin:8px 0 0;line-height:1;color:#fff9e8;text-shadow:0 5px 25px rgba(0,0,0,.25)}
+    .subtitle{margin:10px auto 22px;max-width:470px;color:#f4dfe2;font-size:clamp(.95rem,3.6vw,1.1rem);line-height:1.7}
+    .wheel-shell{position:relative;width:min(88vw,430px);aspect-ratio:1;margin:0 auto 24px;padding:11px;border-radius:50%;background:linear-gradient(145deg,#fff2bd,#b88738 45%,#fff4c9);box-shadow:0 25px 70px rgba(0,0,0,.42),0 0 0 7px rgba(255,255,255,.08)}
+    .wheel-shell:before{content:"";position:absolute;inset:4px;border-radius:50%;border:2px solid rgba(105,42,31,.65);pointer-events:none}
+    canvas{width:100%;height:100%;display:block;border-radius:50%;background:#fff}
+    .pointer{position:absolute;z-index:5;top:-17px;left:50%;transform:translateX(-50%);width:46px;height:66px;background:linear-gradient(145deg,#fff8da,#c99b4c);clip-path:polygon(50% 100%,0 30%,18% 0,82% 0,100% 30%);filter:drop-shadow(0 5px 4px rgba(0,0,0,.35))}
+    .hub{position:absolute;z-index:4;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#aa5060,var(--wine) 62%,#30040d);border:6px solid #e5c685;color:#fff7d7;font-size:22px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+    button{width:min(100%,350px);border:0;border-radius:999px;padding:16px 24px;font:800 1.18rem 'Kantumruy Pro',sans-serif;color:var(--wine2);background:linear-gradient(135deg,#fff5c8,#d2a85c);box-shadow:0 13px 32px rgba(0,0,0,.3),inset 0 1px #fff;cursor:pointer;transition:.2s transform,.2s filter}
+    button:hover{transform:translateY(-2px);filter:brightness(1.05)}button:active{transform:scale(.98)}button:disabled{cursor:not-allowed;filter:grayscale(.65);opacity:.7;transform:none}
+    .status{min-height:30px;margin-top:14px;color:#f7e6e9;font-size:.95rem}
+    .note{margin:20px auto 0;color:#d9bdc4;font-size:.78rem;line-height:1.6;max-width:440px}
+    .modal{position:fixed;z-index:20;inset:0;display:none;place-items:center;padding:20px;background:rgba(27,2,9,.8);backdrop-filter:blur(9px)}
+    .modal.show{display:grid}.modal-box{width:min(100%,390px);padding:34px 24px;border-radius:28px;text-align:center;color:var(--ink);background:linear-gradient(160deg,#fffdf8,#f7e9df);border:3px solid var(--gold);box-shadow:0 30px 90px rgba(0,0,0,.5);animation:pop .38s ease}
+    .modal-box small{letter-spacing:.14em;color:#985263;font-weight:800}.result{font-family:'Playfair Display',serif;font-size:6rem;line-height:1;margin:12px 0;color:var(--wine)}
+    .modal-box h2{margin:0 0 8px;color:var(--wine)}.modal-box p{line-height:1.7;margin:0 0 20px;color:#62434b}.modal-box button{width:100%;font-size:1rem}
+    @keyframes pop{from{opacity:0;transform:scale(.7) rotate(-4deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+    @media(max-width:420px){.page{padding-top:20px}.wheel-shell{width:90vw}.hub{width:62px;height:62px;font-size:18px}.subtitle{margin-bottom:16px}}
+  </style>
 </head>
 <body>
-
-    <div class="lantern-container">
-        <div class="lantern" style="left: 20px;"></div>
-        <div class="lantern" style="right: 20px; animation-delay: 1s;"></div>
-    </div>
-
-    <div class="header-container">
-        <div class="logo-box">
-            <img src="logo.png">
-        </div>
-        <h1>Yah Rapha X MasterCare</h1>
-        <div class="khmer-title">រីករាយពិធីបុណ្យចូលឆ្នាំចិន</div>
-        <div class="subtitle">សូមជូនពរឆ្នាំថ្មី ហេង ហេង! 🧧</div>
-    </div>
-
-    <div class="wheel-wrapper">
+  <main class="page">
+    <section class="card">
+      <div class="brand"><span class="brand-mark">M</span> MASTERCARE</div>
+      <h1>Lucky Number Wheel</h1>
+      <p class="subtitle">បង្វិលកង់ដើម្បីទទួលបានលេខសំណាងរបស់អ្នក។ អ្នកអាចបង្វិលបានតែមួយដងប៉ុណ្ណោះ។</p>
+      <div class="wheel-shell">
         <div class="pointer"></div>
-        <div class="wheel-container">
-            <canvas id="wheelCanvas" width="500" height="500"></canvas>
-        </div>
-        <div class="center-circle">福</div>
+        <canvas id="wheel" width="900" height="900" aria-label="MasterCare random number wheel"></canvas>
+        <div class="hub">SPIN</div>
+      </div>
+      <button id="spinBtn" type="button">ចុចដើម្បីបង្វិល</button>
+      <div class="status" id="status"></div>
+      <p class="note">លេខក្នុងកម្មវិធី៖ 10–32 និង 49–60។ លទ្ធផលត្រូវបានរក្សាទុកក្នុង browser នេះ ដើម្បីទប់ស្កាត់ការបង្វិលម្ដងទៀត។</p>
+    </section>
+  </main>
+
+  <div class="modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+    <div class="modal-box">
+      <small>MASTERCARE LUCKY NUMBER</small>
+      <div class="result" id="resultNumber">--</div>
+      <h2 id="resultTitle">អបអរសាទរ!</h2>
+      <p>សូមថត Screenshot លទ្ធផលនេះទុកជាភស្តុតាង។</p>
+      <button id="closeModal" type="button">រក្សាទុកលទ្ធផល</button>
     </div>
+  </div>
 
-    <button id="spinBtn">ចុចផ្សងសំណាង (Spin)</button>
+  <script>
+    const numbers=[...Array.from({length:23},(_,i)=>i+10),...Array.from({length:12},(_,i)=>i+49)];
+    const canvas=document.getElementById('wheel'),ctx=canvas.getContext('2d');
+    const spinBtn=document.getElementById('spinBtn'),status=document.getElementById('status');
+    const modal=document.getElementById('resultModal'),resultNumber=document.getElementById('resultNumber');
+    const storageKey='mastercare-wheel-result-v1';
+    const palette=['#681225','#f8eadf','#a75b69','#ead09b','#4b0b1a','#fff8ed'];
+    let rotation=0,spinning=false;
 
-    <div class="info-card">
-        <h3>ទំនាក់ទំនងយើងខ្ញុំ (Contact)</h3>
-        <a href="https://www.facebook.com/profile.php?id=61550845002500" class="contact-item">
-            🔵 Facebook Page
-        </a>
-        <div class="contact-item">
-            ☎️ 097 777 9777 | 010 552 088
-        </div>
-        <a href="https://t.me/Yahrapha" class="contact-item">
-            ✈️ Telegram: @Yahrapha
-        </a>
-        <a href="https://maps.app.goo.gl/SDYVW5kAucR6pdXp7?g_st=com.google.maps.preview.copy" class="contact-item">
-            📍 ទីតាំង (Location Map)
-        </a>
-    </div>
+    function drawWheel(angle=0){
+      const size=canvas.width,c=size/2,r=c-14,slice=Math.PI*2/numbers.length;
+      ctx.clearRect(0,0,size,size);ctx.save();ctx.translate(c,c);ctx.rotate(angle);
+      numbers.forEach((n,i)=>{
+        const start=i*slice-Math.PI/2;
+        ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r,start,start+slice);ctx.closePath();
+        ctx.fillStyle=palette[i%palette.length];ctx.fill();
+        ctx.strokeStyle='rgba(255,255,255,.42)';ctx.lineWidth=2;ctx.stroke();
+        ctx.save();ctx.rotate(start+slice/2);ctx.translate(r*.77,0);ctx.rotate(Math.PI/2);
+        ctx.fillStyle=[1,3,5].includes(i%6)?'#4b0b1a':'#fffaf1';ctx.font='700 25px Kantumruy Pro, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n,0,0);ctx.restore();
+      });ctx.restore();
+    }
 
-    <div class="modal" id="resultModal">
-        <div class="modal-content">
-            <h2 id="mTitle" style="color:#B71C1C; margin:0; font-size: 1.6rem; font-family:'Battambang';">អបអរសាទរ!</h2>
-            <div id="mPrize" class="prize-text"></div>
-            <p id="mMsg" class="modal-msg"></p>
-            <button class="close-btn" onclick="document.getElementById('resultModal').style.display='none'">យល់ព្រម (OK)</button>
-        </div>
-    </div>
+    function savedResult(){try{return JSON.parse(localStorage.getItem(storageKey));}catch{return null}}
+    function lockWithResult(data){spinBtn.disabled=true;spinBtn.textContent='បានបង្វិលរួចហើយ';status.textContent=`លេខសំណាងរបស់អ្នកគឺ ${data.number}`}
+    function showResult(number){resultNumber.textContent=number;modal.classList.add('show')}
 
-    <script>
-        const canvas = document.getElementById('wheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const spinBtn = document.getElementById('spinBtn');
-        const modal = document.getElementById('resultModal');
-
-        // --- PRIZES CONFIG (Trilingual) ---
-        const prizes = [
-            // WINNERS (3 Items)
-            { lines: ["$5", "ប័ណ្ណ Voucher"], color: "#D32F2F", text: "#FFD700" },          
-            { lines: ["$10", "ប័ណ្ណ Voucher"], color: "#FFD700", text: "#D32F2F" },         
-            { lines: ["Free", "ស្ប៉ាមុខ (Facial)"], color: "#D32F2F", text: "#FFD700" },     
-            
-            // LOSERS - 0% Chance (Services)
-            { lines: ["Free សម្រកគីឡូ", "1 តួខ្លួន"], color: "#FFD700", text: "#D32F2F" }, 
-            { lines: ["Free HIFU", "Ultra Former"], color: "#D32F2F", text: "#FFD700" },    
-            { lines: ["Free", "Botox"], color: "#FFD700", text: "#D32F2F" },                
-            
-            // LOSERS - 0% Chance (Big Vouchers)
-            { lines: ["$50", "ប័ណ្ណ Voucher"], color: "#D32F2F", text: "#FFD700" },         
-            { lines: ["$100", "ប័ណ្ណ Voucher"], color: "#FFD700", text: "#D32F2F" },        
-            
-            // LOSER - 35% Chance (Try Again)
-            { lines: ["សូមអរគុណ", "Good Luck"], color: "#FFF8DC", text: "#555" }     
-        ];
-
-        // --- WINNING ODDS (Total 100) ---
-        const weights = [
-            30,  // Index 0: $5 Voucher   (30%)
-             5,  // Index 1: $10 Voucher  (5%)
-            30,  // Index 2: Free Facial  (30%)
-             0,  // Index 3: Slimming     (0%)
-             0,  // Index 4: HIFU         (0%)
-             0,  // Index 5: Botox        (0%)
-             0,  // Index 6: $50 Voucher  (0%)
-             0,  // Index 7: $100 Voucher (0%)
-            35   // Index 8: Good Luck    (35%)
-        ];
-
-        let startAngle = 0;
-        let arc = Math.PI / (prizes.length / 2);
-        let isSpinning = false;
-
-        function drawWheel() {
-            ctx.clearRect(0, 0, 500, 500);
-            const cx = 250, cy = 250, r = 240;
-
-            for(let i=0; i<prizes.length; i++) {
-                let angle = startAngle + i * arc;
-                
-                // Draw Segment
-                ctx.fillStyle = prizes[i].color;
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.arc(cx, cy, r, angle, angle + arc);
-                ctx.fill();
-                ctx.stroke();
-
-                // Draw Text
-                ctx.save();
-                ctx.fillStyle = prizes[i].text;
-                // Add Shadow for readability
-                ctx.shadowColor = "rgba(0,0,0,0.2)";
-                ctx.shadowBlur = 4;
-                
-                ctx.translate(cx + Math.cos(angle + arc/2)*160, cy + Math.sin(angle + arc/2)*160);
-                ctx.rotate(angle + arc/2 + Math.PI/2);
-                
-                // Use Battambang for Khmer support
-                ctx.font = 'bold 15px "Battambang", sans-serif'; 
-                ctx.textAlign = "center";
-                ctx.fillText(prizes[i].lines[0], 0, -10);
-                if(prizes[i].lines[1]) ctx.fillText(prizes[i].lines[1], 0, 15);
-                ctx.restore();
-            }
+    function spin(){
+      if(spinning||savedResult())return;
+      spinning=true;spinBtn.disabled=true;spinBtn.textContent='កំពុងបង្វិល...';status.textContent='សូមរង់ចាំលទ្ធផល';
+      const winnerIndex=Math.floor(Math.random()*numbers.length),slice=Math.PI*2/numbers.length;
+      const target=-(winnerIndex*slice+slice/2)+Math.PI/2;
+      const start=rotation,total=8*Math.PI+((target-start)%(Math.PI*2)+Math.PI*2)%(Math.PI*2),duration=5200,startTime=performance.now();
+      function animate(now){
+        const p=Math.min((now-startTime)/duration,1),ease=1-Math.pow(1-p,4);
+        rotation=start+total*ease;drawWheel(rotation);
+        if(p<1){requestAnimationFrame(animate)}else{
+          spinning=false;rotation%=Math.PI*2;
+          const data={number:numbers[winnerIndex],createdAt:new Date().toISOString()};
+          localStorage.setItem(storageKey,JSON.stringify(data));lockWithResult(data);showResult(data.number);
         }
+      }requestAnimationFrame(animate);
+    }
 
-        function getWinner() {
-            let total = weights.reduce((a,b)=>a+b,0);
-            let r = Math.random() * total;
-            for(let i=0; i<weights.length; i++) {
-                if(r < weights[i]) return i;
-                r -= weights[i];
-            }
-            return weights.length-1;
-        }
-
-        function spin() {
-            if(isSpinning) return;
-            isSpinning = true;
-            spinBtn.disabled = true;
-
-            let winner = getWinner();
-            let slice = (2*Math.PI)/prizes.length;
-            let targetAngle = (winner*slice) + (slice/2);
-            let stop = (3*Math.PI/2) - targetAngle + (Math.random()*slice*0.8 - slice*0.4);
-            let rotation = (10 * 2*Math.PI) + (stop - (startAngle % (2*Math.PI)));
-
-            let start = Date.now();
-            let duration = 5000;
-            let initAngle = startAngle;
-
-            function animate() {
-                let now = Date.now();
-                let t = Math.min(1, (now-start)/duration);
-                let ease = 1 - Math.pow(1-t, 4); 
-                startAngle = initAngle + (rotation * ease);
-                drawWheel();
-                
-                if(t<1) requestAnimationFrame(animate);
-                else {
-                    isSpinning = false;
-                    spinBtn.disabled = false;
-                    showResult(winner);
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-
-        function showResult(i) {
-            let p = prizes[i];
-            let text = p.lines.join(" ");
-            let title = document.getElementById('mTitle');
-            let prizeDiv = document.getElementById('mPrize');
-            let msg = document.getElementById('mMsg');
-
-            // Index 8 is the Loser (Good Luck)
-            if(i === 8) { 
-                title.innerText = "អរគុណ! (Thank You)";
-                prizeDiv.innerText = "សំណាងល្អលើកក្រោយ"; // Good Luck Next Time in Khmer
-                prizeDiv.style.color = "#555";
-                prizeDiv.style.background = "#f0f0f0";
-                prizeDiv.style.borderColor = "#ccc";
-                
-                msg.innerHTML = "ជូនពរអ្នកសំណាងល្អក្នុងឆ្នាំថ្មី!<br>Wish you luck in the New Year!<br>祝你好运！";
-                
-            } else {
-                title.innerText = "អបអរសាទរ! (Congrats)";
-                prizeDiv.innerText = text;
-                prizeDiv.style.color = "#D32F2F";
-                prizeDiv.style.background = "#FFF8DC";
-                prizeDiv.style.borderColor = "#FFD700";
-                
-                msg.innerHTML = "សូមបង្ហាញអេក្រង់នេះដល់បុគ្គលិកដើម្បីទទួលរង្វាន់។<br>Please show this screen to our staff to claim.<br>请向工作人员出示此屏幕以领取奖品。";
-            }
-            modal.style.display = 'flex';
-        }
-
-        drawWheel();
-        spinBtn.addEventListener('click', spin);
-    </script>
+    spinBtn.addEventListener('click',spin);
+    document.getElementById('closeModal').addEventListener('click',()=>modal.classList.remove('show'));
+    drawWheel();
+    const existing=savedResult();if(existing){lockWithResult(existing);resultNumber.textContent=existing.number}
+  </script>
 </body>
-
 </html>
-
