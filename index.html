@@ -47,12 +47,12 @@
       <p class="subtitle">បង្វិលកង់ដើម្បីទទួលបានលេខសំណាងរបស់អ្នក។ អ្នកអាចបង្វិលបានច្រើនដង។</p>
       <div class="wheel-shell">
         <div class="pointer"></div>
-        <canvas id="wheel" width="900" height="900" aria-label="MasterCare random number wheel"></canvas>
+        <canvas id="wheel" width="900" height="900" aria-label="MasterCare random number wheel containing 1 to 32 and 40 to 60"></canvas>
         <div class="hub">SPIN</div>
       </div>
       <button id="spinBtn" type="button">ចុចដើម្បីបង្វិល</button>
       <div class="status" id="status"></div>
-      <p class="note">លេខក្នុងកម្មវិធី៖ 10–32 និង 49–60។ អាចចុចបង្វិលម្ដងទៀតបានគ្រប់ពេល។</p>
+      <p class="note">លេខក្នុងកម្មវិធី៖ 1–32 និង 40–60។ អាចចុចបង្វិលម្ដងទៀតបានគ្រប់ពេល។</p>
     </section>
   </main>
 
@@ -67,7 +67,12 @@
   </div>
 
   <script>
-    const numbers=[...Array.from({length:23},(_,i)=>i+10),...Array.from({length:12},(_,i)=>i+49)];
+    const numbers=[...Array.from({length:32},(_,i)=>i+1),...Array.from({length:21},(_,i)=>i+40)];
+    const EXPECTED_NUMBER_COUNT=53;
+    if(numbers.length!==EXPECTED_NUMBER_COUNT||new Set(numbers).size!==EXPECTED_NUMBER_COUNT){
+      throw new Error('Lucky wheel number list is incomplete or contains duplicates.');
+    }
+
     const canvas=document.getElementById('wheel'),ctx=canvas.getContext('2d');
     const spinBtn=document.getElementById('spinBtn'),status=document.getElementById('status');
     const modal=document.getElementById('resultModal'),resultNumber=document.getElementById('resultNumber');
@@ -84,9 +89,9 @@
         const start=i*slice-Math.PI/2;
         ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r,start,start+slice);ctx.closePath();
         ctx.fillStyle=palette[i%palette.length];ctx.fill();
-        ctx.strokeStyle='rgba(255,255,255,.42)';ctx.lineWidth=2;ctx.stroke();
-        ctx.save();ctx.rotate(start+slice/2);ctx.translate(r*.77,0);ctx.rotate(Math.PI/2);
-        ctx.fillStyle=[1,3,5].includes(i%6)?'#4b0b1a':'#fffaf1';ctx.font='700 25px Kantumruy Pro, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n,0,0);ctx.restore();
+        ctx.strokeStyle='rgba(255,255,255,.42)';ctx.lineWidth=1.4;ctx.stroke();
+        ctx.save();ctx.rotate(start+slice/2);ctx.translate(r*.82,0);ctx.rotate(Math.PI/2);
+        ctx.fillStyle=[1,3,5].includes(i%6)?'#4b0b1a':'#fffaf1';ctx.font='700 22px Kantumruy Pro, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n,0,0);ctx.restore();
       });ctx.restore();
     }
 
