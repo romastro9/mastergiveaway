@@ -4,14 +4,14 @@ A responsive static lucky wheel for MasterCare.
 
 ## Numbers
 
-- 10–32
-- 49–60
+- 1–32
+- 40–60
 
-## One-spin rule
+The wheel contains 53 unique numbers in total.
 
-After a visitor spins, the winning number is stored in that browser's `localStorage`. The spin button remains locked when the visitor returns using the same browser storage.
+## Spins
 
-> Because GitHub Pages is static hosting, clearing browser data, using private browsing, or switching devices can bypass this browser-level lock. A strict one-spin-per-person system requires login, phone verification, or a backend database.
+Visitors can spin the wheel multiple times. The popup result is calculated from the final number positioned under the arrow.
 
 ## GitHub Pages
 
