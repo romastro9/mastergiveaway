@@ -47,12 +47,12 @@
       <p class="subtitle">បង្វិលកង់ដើម្បីទទួលបានលេខសំណាងរបស់អ្នក។ អ្នកអាចបង្វិលបានច្រើនដង។</p>
       <div class="wheel-shell">
         <div class="pointer"></div>
-        <canvas id="wheel" width="900" height="900" aria-label="MasterCare random number wheel containing 1 to 32 and 40 to 60"></canvas>
+        <canvas id="wheel" width="900" height="900" aria-label="MasterCare random number wheel containing 1 to 32 and 40 to 60, excluding 5, 7, 17, 21, 27, 31, 41 and 53"></canvas>
         <div class="hub">SPIN</div>
       </div>
       <button id="spinBtn" type="button">ចុចដើម្បីបង្វិល</button>
       <div class="status" id="status"></div>
-      <p class="note">លេខក្នុងកម្មវិធី៖ 1–32 និង 40–60។ អាចចុចបង្វិលម្ដងទៀតបានគ្រប់ពេល។</p>
+      <p class="note">បានដកលេខ៖ 5, 7, 17, 21, 27, 31, 41 និង 53។ អាចចុចបង្វិលម្ដងទៀតបានគ្រប់ពេល។</p>
     </section>
   </main>
 
@@ -67,10 +67,18 @@
   </div>
 
   <script>
-    const numbers=[...Array.from({length:32},(_,i)=>i+1),...Array.from({length:21},(_,i)=>i+40)];
-    const EXPECTED_NUMBER_COUNT=53;
-    if(numbers.length!==EXPECTED_NUMBER_COUNT||new Set(numbers).size!==EXPECTED_NUMBER_COUNT){
-      throw new Error('Lucky wheel number list is incomplete or contains duplicates.');
+    const excludedNumbers=new Set([5,7,17,21,27,31,41,53]);
+    const numbers=[
+      ...Array.from({length:32},(_,i)=>i+1),
+      ...Array.from({length:21},(_,i)=>i+40)
+    ].filter(number=>!excludedNumbers.has(number));
+    const EXPECTED_NUMBER_COUNT=45;
+    if(
+      numbers.length!==EXPECTED_NUMBER_COUNT||
+      new Set(numbers).size!==EXPECTED_NUMBER_COUNT||
+      numbers.some(number=>excludedNumbers.has(number))
+    ){
+      throw new Error('Lucky wheel number list is incomplete, contains duplicates, or includes excluded numbers.');
     }
 
     const canvas=document.getElementById('wheel'),ctx=canvas.getContext('2d');
