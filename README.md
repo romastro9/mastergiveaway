@@ -4,10 +4,9 @@ A responsive static lucky wheel for MasterCare.
 
 ## Numbers
 
-- 1–32
-- 40–60
+The wheel contains these 22 unique numbers:
 
-The wheel contains 53 unique numbers in total.
+`8, 16, 4, 45, 11, 40, 10, 1, 12, 9, 50, 51, 52, 43, 20, 22, 54, 44, 24, 56, 70, 71`
 
 ## Spins
 
